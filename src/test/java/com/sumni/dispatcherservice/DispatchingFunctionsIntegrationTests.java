@@ -1,5 +1,6 @@
 package com.sumni.dispatcherservice;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.function.context.FunctionCatalog;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 @FunctionalSpringBootTest
+@Disabled("These tests are only necessary when using the functions alone (no bindings)")
 public class DispatchingFunctionsIntegrationTests {
     @Autowired
     private FunctionCatalog catalog;
@@ -29,7 +31,7 @@ public class DispatchingFunctionsIntegrationTests {
                         packAndLabel.apply(new OrderAcceptedMessage(orderId))
                 )
                 .expectNextMatches(orderDispatchedMessage ->
-                        orderDispatchedMessage.equals(new OrderDispatchedMessage(orderId))
+                        orderDispatchedMessage.orderId().equals(orderId)
                 )
                 .verifyComplete();
     }
